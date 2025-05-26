@@ -1,0 +1,29 @@
+.container {
+  width: 100vw;
+  height: 80px;
+  border-bottom: 1px solid #d2d2d2;
+  padding: 0 100px;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: rgba(255, 255, 255, 0.95);
+
+  box-sizing: border-box;
+}
+
+.tab {
+  color: #888888;
+  font-size: 16px;
+  width: 120px;
+  text-align: center;
+}
+
+.tab.active {
+  color: #323232;
+  font-weight: 700;
+}

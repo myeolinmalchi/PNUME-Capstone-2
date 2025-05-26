@@ -1,0 +1,62 @@
+.container {
+  width: 100%;
+  height: calc(100vh - 80px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 80px;
+}
+
+/* 상하좌우 컨테이너 */
+.plane-container {
+  width: 240px;
+  height: 240px;
+  position: relative;
+}
+
+/* 앞뒤 컨테이너 */
+.horizontal-container {
+  width: 240px;
+  height: 240px;
+  position: relative;
+}
+
+.arrow {
+  width: 80px;
+  height: 80px;
+  position: absolute;
+  transition: opacity 0.1s;
+  opacity: 0.85;
+}
+
+.arrow:hover {
+  opacity: 0.75;
+}
+
+.arrow:active {
+  opacity: 0.6;
+}
+
+.arrow.up {
+  top: 0px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.arrow.down {
+  bottom: 0px;
+  left: 50%;
+  transform: translateX(-50%) rotate(180deg);
+}
+
+.arrow.left {
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%) rotate(270deg);
+}
+
+.arrow.right {
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%) rotate(90deg);
+}
