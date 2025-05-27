@@ -1,0 +1,1 @@
+YoloTensor[] tensors   # 길이 = 6   (3 스케일 × 2 branch)
