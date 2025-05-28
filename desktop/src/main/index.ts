@@ -1,7 +1,6 @@
 import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
-import icon from '../../resources/icon.png?asset'
 import { SerialPort } from 'serialport'
 import { SystemState } from './constants/ipcMessages'
 
@@ -11,11 +10,11 @@ const createWindow = () => {
     height: 670,
     show: false,
     autoHideMenuBar: true,
-    ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       sandbox: false
-    }
+    },
+    resizable: false
   })
 
   mainWindow.on('ready-to-show', () => {
@@ -36,8 +35,8 @@ const createWindow = () => {
   return mainWindow
 }
 
-const ODROID_VENDOR_ID = ''
-const WATCH_INTERVAL = 200
+const ODROID_VENDOR_ID = '0525' // 장치 인식하기 위한 벤더 ID
+const WATCH_INTERVAL = 200 // 장치 연결 여부 확인 주기
 const ODROID_BAUD_RATE = 115200
 
 let currentPort: string | null = null
@@ -46,10 +45,14 @@ let currentSerial: SerialPort | null = null
 const pollSerial = async (win: BrowserWindow) => {
   const ports = await SerialPort.list()
 
-  if (currentSerial && !ports.find((port) => port.path === currentPort)) {
-    currentSerial.close()
-    currentSerial = null
-    currentPort = null
+  if (currentSerial) {
+    if (!ports.find((port) => port.path === currentPort)) {
+      currentSerial.close()
+      currentSerial = null
+      currentPort = null
+    }
+
+    return
   }
 
   const found = ports.find((port) => port.vendorId === ODROID_VENDOR_ID)
@@ -57,9 +60,7 @@ const pollSerial = async (win: BrowserWindow) => {
   if (!found) return
 
   currentPort = found.path
-  currentSerial = new SerialPort({ path: found.path, baudRate: ODROID_BAUD_RATE })
-
-  ipcMain.send('system-state')
+  currentSerial = new SerialPort({ path: currentPort, baudRate: ODROID_BAUD_RATE })
 
   currentSerial.on('data', (data) => {
     // TODO
@@ -70,7 +71,8 @@ const pollSerial = async (win: BrowserWindow) => {
     currentSerial = null
   })
 
-  console.log(`포트에 연결되었습니다: ${found.path}`)
+  console.log(`Serial Port Connected: ${found.path}`)
+  win.webContents.send('init', 'INIT')
 }
 
 app.whenReady().then(() => {
@@ -86,7 +88,10 @@ app.whenReady().then(() => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
   })
 
-  setInterval(() => pollSerial(win), WATCH_INTERVAL)
+  win.webContents.on('did-finish-load', () => {
+    // Run interval when renderer is initialized
+    setInterval(() => pollSerial(win), WATCH_INTERVAL)
+  })
 })
 
 app.on('window-all-closed', () => {
@@ -96,10 +101,17 @@ app.on('window-all-closed', () => {
 })
 
 ipcMain.on('system-state', (_, data: SystemState) => {
+  console.log('SystemState has been modified:')
+  console.log(data)
+
   if (!currentSerial || !currentSerial.isOpen) return
-  currentSerial.write(data, (err) => {
+
+  const jsonString = JSON.stringify(data)
+
+  currentSerial.flush()
+  currentSerial.write(jsonString, (err) => {
     if (err) {
-      console.log(`시리얼 통신 중 오류 발생: ${err.message}`)
+      console.log(`[${currentPort}]: ${err.message}`)
     }
   })
 })
