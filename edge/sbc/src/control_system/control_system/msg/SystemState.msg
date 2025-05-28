@@ -1,20 +1,20 @@
 #####################################
 ##  System Mode
 ######################################
-string IDLE     = "IDLE"
-string TRACKING = "TRACKING"
-string MANUAL   = "MANUAL"
+string IDLE     = "paused"
+string TRACKING = "tracking"
+string MANUAL   = "manual"
 
 ######################################
 ##  Command (manual mode only)
 ######################################
-string NONE        = "NONE"
-string TURN_LEFT   = "TURN_LEFT"
-string TURN_RIGHT  = "TURN_RIGHT"
-string MOVE_UP     = "MOVE_UP"
-string MOVE_DOWN   = "MOVE_DOWN"
-string MOVE_FRONT  = "MOVE_FRONT"
-string MOVE_BACK   = "MOVE_BACK"
+string NONE        = "none"
+string TURN_LEFT   = "turn_left"
+string TURN_RIGHT  = "turn_right"
+string MOVE_UP     = "move_up"
+string MOVE_DOWN   = "move_down"
+string MOVE_FRONT  = "move_front"
+string MOVE_BACK   = "move_back"
 
 ######################################
 ##  Field

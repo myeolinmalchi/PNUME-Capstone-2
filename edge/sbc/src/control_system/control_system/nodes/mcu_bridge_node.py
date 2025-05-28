@@ -38,15 +38,8 @@ class MCUBridgeNode(Node):
             },
         }
 
-    def face_listener(self, msg):
-        # TODO: 직렬 통신으로 MCU에 포커싱 데이터 전송
-        pass
-
     def state_listener(self, msg):
-        """SystemState 변경시 mcu에 상태값 갱신
-
-        TRACKING으로 변환
-        """
+        """SystemState 변경시 mcu에 상태값 갱신"""
 
         data = None
 

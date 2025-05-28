@@ -11,7 +11,11 @@ DESKTOP_BUAD_RATE = 115200
 
 
 class DesktopBridgeNode(Node):
-    """데스크탑과 통신하며 System State 설정하는 노드"""
+    """데스크탑과 직접 통신하는 노드
+    
+    System State: Desktop에서 전역 상태 전달
+    Identified Faces: 카메라에 인식된 얼굴 리스트 전달
+    """
 
     def __init__(self):
         super().__init__('desktop_bridge_node')
@@ -21,11 +25,13 @@ class DesktopBridgeNode(Node):
         self.desktop_serial = serial.Serial(DESKTOP_SERIAL_PORT,
                                             DESKTOP_BUAD_RATE,
                                             timeout=1)
+
         self.pub = self.create_publisher(SystemState, 'system_state', 10)
         self.create_subscription(TrackedFaces, 'identified_faces',
                                  self.faces_listener, 10)
 
     def faces_listener(self, msg):
+        """탐지된 얼굴 bbox 목록"""
 
         faces = []
         for face in msg.faces:
