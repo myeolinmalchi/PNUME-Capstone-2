@@ -62,10 +62,12 @@ class DesktopBridgeNode(Node):
     def run(self):
         """데스크탑 명령 수신을 위한 메인 루프 실행"""
 
+        print(f"[desktop_bridge_node] 시리얼 통신 대기중")
+
         while True:
             if self.desktop_serial.in_waiting:
                 line: str = self.desktop_serial.readline().decode().strip()
-                self.get_logger().info(f'[RX] Received from desktop: {line}')
+                print(f"[desktop_bridge_node] line: {line}")
 
                 stateDict = json.loads(line)
                 self.state = stateDict
@@ -75,6 +77,8 @@ class DesktopBridgeNode(Node):
                     command=stateDict["manualState"]["currentCommand"],
                     tracking_id=stateDict["trackingState"]["trackingId"],
                 )
+
+                print(f"[desktop_bridge_node] state msg: {stateMsg}")
                 self.pub.publish(stateMsg)
 
             rclpy.spin_once(self, timeout_sec=0.01)
