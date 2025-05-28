@@ -73,20 +73,21 @@ class DesktopBridgeNode(Node):
                 self.state = stateDict
 
                 stateMsg = SystemState(
-                    mode=stateDict["mode"],
-                    command=stateDict["manualState"]["currentCommand"],
-                    tracking_id=stateDict["trackingState"]["trackingId"],
+                    mode=stateDict["mode"] or -1,
+                    command=stateDict["manualState"]["currentCommand"] or -1,
+                    tracking_id=stateDict["trackingState"]["currentId"] or -1,
                 )
 
                 print(f"[desktop_bridge_node] state msg: {stateMsg}")
-                self.pub.publish(stateMsg)
+                self.pub.publish(self.state)
 
             rclpy.spin_once(self, timeout_sec=0.01)
 
 
 def main():
     rclpy.init()
-    rclpy.spin(DesktopBridgeNode())
+    node = DesktopBridgeNode()
+    node.run()
     rclpy.shutdown()
 
 
