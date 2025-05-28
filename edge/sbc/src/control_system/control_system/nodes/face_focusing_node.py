@@ -1,9 +1,7 @@
 # face_focusing_node.py
 import rclpy
 from rclpy.node import Node
-from control_system_interfaces.msg import TrackedFaces, FaceFocus, SystemState
-from control_system.utils.yolo.yolo11 import YOLO11
-from control_system.utils.yolo.wrappers import RKNNWrapper
+from control_system_interfaces.msg import TrackedFaces, TrackedFace, SystemState
 
 
 class FaceFocusingNode(Node):
@@ -15,30 +13,38 @@ class FaceFocusingNode(Node):
         self.create_subscription(
             SystemState,
             'system_state',
-            self.cb_state,
+            self.system_listener,
             10,
         )
         self.create_subscription(
             TrackedFaces,
             'identified_faces',
-            self.cb_faces,
+            self.faces_listener,
             10,
         )
         self.pub = self.create_publisher(
-            FaceFocus,
+            TrackedFace,
             'current_face',
             10,
         )
 
-    def cb_state(self, msg):
-        self.state = msg
+        self.faces = []
+        self.id = None
 
-    def cb_faces(self, faces_msg):
-        if self.state.mode != SystemState.TRACKING:
-            return
-        focus = FaceFocus()
-        # TODO: tracking_id 와 일치하는 얼굴 추출
-        self.pub.publish(focus)
+    def focus(self):
+        for face in self.faces:
+            if face.id == self.tracking_id:
+                return face
+
+        return None
+
+    def system_listener(self, msg):
+        self.tracking_id = msg.tracking_id
+        self.pub.publish(self.focus())
+
+    def faces_listener(self, msg):
+        self.faces = msg.faces
+        self.pub.publish(self.focus())
 
 
 def main():
