@@ -5,9 +5,12 @@ import './styles/reset.css'
 import styles from './App.module.css'
 import { useSystemState } from './stores/systemStateStore'
 import PausedMode from './components/modes/PausedMode'
+import useIPCSync from './hooks/useIPCSync'
 
 const App = () => {
   const { mode } = useSystemState()
+
+  useIPCSync()
 
   return (
     <>
