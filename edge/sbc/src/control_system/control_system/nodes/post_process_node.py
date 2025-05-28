@@ -1,7 +1,7 @@
 import rclpy
 from rclpy.node import Node
 
-from control_system.msg import (
+from control_system_interfaces.msg import (
     YoloRawDetections,
     BoundingBox,
     BoundingBoxes,

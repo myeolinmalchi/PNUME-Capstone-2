@@ -1,7 +1,7 @@
 # face_focusing_node.py
 import rclpy
 from rclpy.node import Node
-from control_system.msg import TrackedFaces, FaceFocus, SystemState
+from control_system_interfaces.msg import TrackedFaces, FaceFocus, SystemState
 from control_system.utils.yolo.yolo11 import YOLO11
 from control_system.utils.yolo.wrappers import RKNNWrapper
 

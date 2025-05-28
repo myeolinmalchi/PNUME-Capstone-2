@@ -1,7 +1,7 @@
 # face_tracking_node.py
 import rclpy
 from rclpy.node import Node
-from control_system.msg import BoundingBox, BoundingBoxes, TrackedFace, TrackedFaces
+from control_system_interfaces.msg import BoundingBox, BoundingBoxes, TrackedFace, TrackedFaces
 from edge.sbc.src.control_system.control_system.utils.sort import Sort
 
 import numpy as np

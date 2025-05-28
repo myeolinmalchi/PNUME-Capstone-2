@@ -1,7 +1,7 @@
 # mcu_bridge_node.py
 import rclpy
 from rclpy.node import Node
-from control_system.msg import TrackedFace, SystemState
+from control_system_interfaces.msg import TrackedFace, SystemState
 
 import serial
 import json

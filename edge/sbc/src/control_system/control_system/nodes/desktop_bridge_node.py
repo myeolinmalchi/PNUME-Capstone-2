@@ -1,7 +1,7 @@
 # desktop_bridge_node.py
 import rclpy
 from rclpy.node import Node
-from control_system.msg import SystemState, TrackedFaces
+from control_system_interfaces.msg import SystemState, TrackedFaces
 
 import serial
 import json
